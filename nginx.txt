@@ -1,0 +1,40 @@
+upstream voteapp {
+    server 192.168.56.108:30001;
+    server 192.168.56.109:30001;
+}
+
+upstream resultapp {
+    server 192.168.56.108:30002;
+    server 192.168.56.109:30002;
+}
+
+# HTTPS listener
+server {
+    listen 443 ssl;
+    server_name 192.168.56.110;
+
+    ssl_certificate     /etc/nginx/ssl/lb.crt;
+    ssl_certificate_key /etc/nginx/ssl/lb.key;
+
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+
+    location /vote {
+        proxy_pass http://voteapp;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /result {
+        proxy_pass http://resultapp;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+# Redirect HTTP → HTTPS
+server {
+    listen 80;
+    server_name 192.168.56.110;
+    return 301 https://$host$request_uri;
+}

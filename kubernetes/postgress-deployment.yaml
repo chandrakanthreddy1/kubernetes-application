@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - secretRef:
+            name: db-secret
+        volumeMounts:
+        # Mount ConfigMap with pg_hba.conf outside the data dir
+        - name: pg-hba
+          mountPath: /etc/postgres-config
+        # Mount PVC for Postgres data directory
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+        env:
+        - name: PGDATA
+          value: /var/lib/postgresql/data
+      volumes:
+      - name: pg-hba
+        configMap:
+          name: postgres-config
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc
