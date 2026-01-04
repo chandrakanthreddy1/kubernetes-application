@@ -36,6 +36,33 @@ Votes are processed asynchronously by a worker, temporarily stored in Redis, per
 
 ---
 
+## 🗳️ Application Screenshots
+
+### Vote Application
+![VoteAPP](screenshots/VoteAPP.png)
+
+### Result Application
+![ResultAPP](screenshots/ResultAPP.png)
+
+---
+
+## 📈 Monitoring
+
+### Grafana Dashboard
+![Grafana](screenshots/GrafanaAPP.png)
+
+### Prometheus UI
+![Prometheus](screenshots/PrometheusAPP.png)
+
+---
+
+## 📜 Centralized Logging (ELK)
+
+### Kibana Logs View
+![Kibana](screenshots/KibanaAPP.png)
+
+---
+
 ## 🧭 Architecture Diagram
 
 ```mermaid
@@ -56,4 +83,3 @@ flowchart LR
         KubeStateMetrics --> Prometheus
         Prometheus --> Grafana
     end
-    ```
