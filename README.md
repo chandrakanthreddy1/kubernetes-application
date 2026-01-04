@@ -36,6 +36,17 @@ Votes are processed asynchronously by a worker, temporarily stored in Redis, per
 
 ---
 
+## 🛠 Technology Stack
+**Kubernetes · Docker · Redis · PostgreSQL · Prometheus · Grafana · Elasticsearch · Kibana · Fluent Bit**
+
+---
+
+## 👨‍💻 Author
+**Chandrakanth Reddy**
+
+⭐ **Star this repo if you find it useful!**
+
+---
 ## 🗳️ Application Screenshots
 
 ### Vote Application
