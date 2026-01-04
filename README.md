@@ -58,7 +58,7 @@ flowchart LR
     end
 
 
-🔄 Application Flow
+Application Flow
 
 User votes via Vote App
 
@@ -70,21 +70,21 @@ Results stored in PostgreSQL
 
 Result App displays results
 
-🌐 Kubernetes Service Design
-🟢 ClusterIP
+ Kubernetes Service Design
+ ClusterIP
 
 Redis
 
 PostgreSQL
 (Internal access only)
 
-🟡 Worker
+ Worker
 
 No Service required
 
 Only makes outbound connections
 
-🔵 NodePort
+ NodePort
 
 Vote App
 
@@ -96,26 +96,26 @@ Prometheus
 
 Kibana
 
-🗳️ Application Screenshots
+ Application Screenshots
 Vote Application
 
 Result Application
 
-📈 Monitoring
+ Monitoring
 
 Prometheus collects metrics from nodes and Kubernetes objects.
 
-📸 Grafana Dashboard
+ Grafana Dashboard
 
-📸 Prometheus UI
+ Prometheus UI
 
-📜 Centralized Logging (ELK)
+ Centralized Logging (ELK)
 
 Logs are collected using Fluent Bit / Fluentd, stored in Elasticsearch, and visualized in Kibana.
 
-📸 Kibana Logs View
+ Kibana Logs View
 
-📸 Screenshots Gallery (All)
+ Screenshots Gallery (All)
 
 This section confirms ALL screenshots are included
 
@@ -135,12 +135,12 @@ Prometheus
 Kibana	
 ![Kibana](screenshots/KibanaAPP.png)
 
-🛠 Technology Stack
+ Technology Stack
 
 Kubernetes · Docker · Redis · PostgreSQL · Prometheus · Grafana · Elasticsearch · Kibana · Fluent Bit
 
-👨‍💻 Author
+ Author
 
 Chandrakanth Reddy
 
-⭐ Star this repo if you find it useful!
+ Star this repo if you find it useful!
