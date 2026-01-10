@@ -1,0 +1,18 @@
+curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+
+helm version
+
+helm repo add kong https://charts.konghq.com
+helm repo update
+
+helm install kong kong/kong --namespace kong --create-namespace
+
+
+kubectl get pods -n kong
+
+kubectl get svc -n kong
+
+
+##in the ingresses it needs domain name in host but we don't havw fake domain so we are using hostless
+-host: won't be used

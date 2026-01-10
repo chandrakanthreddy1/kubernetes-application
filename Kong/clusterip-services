@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote-servic
+spec:
+  selector:
+    app: vote-app
+  ports:
+  - port: 5000
+    targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: result-servic
+spec:
+  selector:
+    app: result-app
+  ports:
+  - port: 5001
+    targetPort: 5001

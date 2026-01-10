@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  annotations: 
+    sidecar.istio.io/inject: "false"
 spec:
   replicas: 1
   selector:
