@@ -1,0 +1,14 @@
+curl -L https://istio.io/downloadIstio | sh -
+cd istio-*
+export PATH=$PWD/bin:$PATH
+
+
+istioctl install --set profile=demo -y
+
+
+kubectl get pods -n istio-system
+kubectl label namespace logging istio-injection=enabled
+
+kubectl get svc istio-ingressgateway -n istio-system
+
+curl http://<INGRESS-IP>/ -I
