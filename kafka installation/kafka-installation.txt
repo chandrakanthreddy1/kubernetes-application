@@ -1,0 +1,86 @@
+##Java Installation First
+# Download latest Java 17 tarball
+wget https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.10+7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.10_7.tar.gz
+
+# Extract to /opt
+sudo tar -xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.10_7.tar.gz -C /opt/
+
+# Set environment variables
+echo 'export JAVA_HOME=/opt/jdk-17.0.10+7' | sudo tee -a /etc/profile
+echo 'export PATH=$JAVA_HOME/bin:$PATH' | sudo tee -a /etc/profile
+
+# Reload profile
+source /etc/profile
+
+# Verify
+java -version
+
+
+##Download kafka
+wget https://archive.apache.org/dist/kafka/3.7.0/kafka_2.13-3.7.0.tgz
+
+tar -xzf kafka_2.13-3.7.0.tgz
+sudo mv kafka_2.13-3.7.0 /opt/kafka
+
+#verify
+/opt/kafka/bin/kafka-topics.sh --version
+
+##Keep in running in background ->this is to connect with brokers_>run only in master
+cd /opt/kafka
+bin/zookeeper-server-start.sh config/zookeeper.properties > /dev/null 2>&1 &
+
+##configure brokers in all servers
+/opt/kafka/config/server.properties
+
+#Master vm config
+broker.id=1
+listeners=PLAINTEXT://<master-ip>:9092
+zookeeper.connect=<master-ip>:2181
+
+#slave vm1
+broker.id=2
+listeners=PLAINTEXT://<slave1-ip>:9092
+zookeeper.connect=<master-ip>:2181
+
+#start on all vm's
+bin/kafka-server-start.sh config/server.properties > /dev/null 2>&1 &
+
+
+ON master ->create topic
+bin/kafka-topics.sh --create \
+  --topic logs-topic \
+  --bootstrap-server 192.168.56.107:9092,192.168.56.108:9092,192.168.56.109:9092 \
+  --replication-factor 2 \
+  --partitions 3
+
+
+  ##verify topic
+  bin/kafka-topics.sh --list --bootstrap-server 192.168.56.107:9092
+
+##test producer and consumer
+bin/kafka-console-producer.sh \
+  --topic logs-topic \
+  --bootstrap-server 192.168.56.107:9092
+
+after the above command type hi , hello, world messages and click ctrl+c to exit from consumer and check the messages in producer
+
+bin/kafka-console-consumer.sh \
+  --topic logs-topic \
+  --bootstrap-server 192.168.56.107:9092 \
+  --from-beginning
+
+try produce message from one node and consumer from another node it works
+
+
+#to setup kafka in kubernetes and ship logs from logstash to es
+/opt/kafka/bin/kafka-topics.sh \
+  --create \
+  --topic kube-logs \
+  --bootstrap-server 192.168.56.107:9092,192.168.56.108:9092,192.168.56.109:9092 \
+  --replication-factor 2 \
+  --partitions 3
+
+/opt/kafka/bin/kafka-topics.sh \
+  --describe \
+  --topic kube-logs \
+  --bootstrap-server 192.168.56.107:9092

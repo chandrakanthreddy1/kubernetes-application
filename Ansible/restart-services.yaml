@@ -1,0 +1,14 @@
+---
+- name: Restart containerd and kubelet on all nodes
+  hosts: all_nodes
+  become: yes
+  tasks:
+    - name: Restart containerd
+      ansible.builtin.systemd:
+        name: containerd
+        state: restarted
+
+    - name: Restart kubelet
+      ansible.builtin.systemd:
+        name: kubelet
+        state: restarted

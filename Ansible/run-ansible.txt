@@ -1,0 +1,19 @@
+ansible-playbook -i hosts.ini restart-services.yml
+
+
+##install ansible
+sudo dnf install ansible-core -y
+
+ansible --version
+
+#test
+ansible -i hosts.ini all_nodes -m ping
+
+#if unreachable generate a key in master
+ssh-keygen -t ed25519 -C "ansible-key"
+
+##copy the key to each node
+ssh-copy-id root@192.168.56.107
+ssh-copy-id root@192.168.56.108
+ssh-copy-id root@192.168.56.109
+

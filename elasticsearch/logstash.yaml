@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: logging
+data:
+  logstash.conf: |
+    input {
+      kafka {
+        bootstrap_servers => "192.168.56.107:9092,192.168.56.108:9092,192.168.56.109:9092"
+        topics => ["kube-logs"]
+        group_id => "logstash-consumer"
+        auto_offset_reset => "earliest"
+      }
+    }
+
+    filter {
+      # optional: parse JSON logs
+      json {
+        source => "message"
+      }
+    }
+
+    output {
+      elasticsearch {
+        hosts => ["http://elasticsearch.logging.svc.cluster.local:9200"]
+        index => "kube-logs-%{+YYYY.MM.dd}"
+      }
+      stdout { codec => rubydebug }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: docker.elastic.co/logstash/logstash:8.15.0
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/logstash/pipeline/
+      volumes:
+      - name: config
+        configMap:
+          name: logstash-config
