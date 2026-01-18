@@ -1,0 +1,8 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: rate-limit-100pm
+config:
+  minute: 100        # allow 100 requests per minute
+  policy: local      # store counters locally (use redis for distributed Kong)
+plugin: rate-limiting

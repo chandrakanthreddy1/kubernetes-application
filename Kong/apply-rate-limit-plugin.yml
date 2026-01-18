@@ -1,0 +1,18 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: vote-rate-limit
+config:
+  minute: 100
+  policy: local
+plugin: rate-limiting
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: result-rate-limit
+config:
+  minute: 50   # maybe stricter for result endpoint
+  policy: local
+plugin: rate-limiting
