@@ -1,0 +1,10 @@
+# Create namespace
+kubectl create namespace argocd
+
+# Install ArgoCD core components
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+Then with Nodeport access VMIP:Nodeport
+
+Then get the password and username will be admin
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
