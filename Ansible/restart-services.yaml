@@ -2,6 +2,7 @@
 - name: Restart containerd and kubelet, stop firewalld on all nodes
   hosts: all_nodes
   become: yes
+  serial: 1
   tasks:
     - name: Stop firewalld
       ansible.builtin.systemd:
