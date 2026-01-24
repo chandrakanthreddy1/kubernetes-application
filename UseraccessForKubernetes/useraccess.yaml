@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: default-namespace-access
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: default-namespace-access-binding
+  namespace: default
+subjects:
+- kind: User
+  name: cpi25
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: default-namespace-access
+  apiGroup: rbac.authorization.k8s.io

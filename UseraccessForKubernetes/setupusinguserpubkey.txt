@@ -1,0 +1,48 @@
+# Create CSR config
+cat > cpi25-csr.conf <<EOF
+[ req ]
+default_bits       = 2048
+prompt             = no
+default_md         = sha256
+distinguished_name = dn
+
+[ dn ]
+CN = cpi25
+O = default
+EOF
+
+# Generate CSR using your public key
+openssl req -new -key cpi25.key -out cpi25.csr -config cpi25-csr.conf
+
+# Sign with cluster CA
+openssl x509 -req -in cpi25.csr \
+  -CA /etc/kubernetes/pki/ca.crt \
+  -CAkey /etc/kubernetes/pki/ca.key \
+  -CAcreateserial \
+  -out cpi25.crt -days 365
+
+
+#Build kube config for user
+kubectl config set-cluster mycluster \
+  --server=https://<API-SERVER-IP>:6443 \
+  --certificate-authority=/etc/kubernetes/pki/ca.crt \
+  --embed-certs=true \
+  --kubeconfig=cpi25.kubeconfig
+
+kubectl config set-credentials cpi25 \
+  --client-certificate=cpi25.crt \
+  --client-key=cpi25.key \
+  --embed-certs=true \
+  --kubeconfig=cpi25.kubeconfig
+
+kubectl config set-context cpi25-context \
+  --cluster=mycluster \
+  --namespace=default \
+  --user=cpi25 \
+  --kubeconfig=cpi25.kubeconfig
+
+kubectl config use-context cpi25-context --kubeconfig=cpi25.kubeconfig
+
+
+##check the config
+kubectl --kubeconfig=cpi25.kubeconfig get pods
